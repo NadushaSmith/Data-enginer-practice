@@ -26,30 +26,40 @@ OLAP-решение для анализа пользовательских со�
 
 **Технологии**: MongoDB, PyMongo, агрегационные пайплайны, JSON отчеты
 
+## 🔄 Kafka Data Pipeline
+**Надежный пайплайн передачи данных между системами**
+
+Устойчивое решение для миграции данных из PostgreSQL в ClickHouse через Apache Kafka с защитой от дублирования. Producer читает данные из PostgreSQL и отправляет в Kafka, а consumers сохраняют данные в целевые системы.
+
+**Особенности**:
+- Защита от дублирования через флаг `sent_to_kafka`
+- Параллельная запись в PostgreSQL и ClickHouse
+- Автоматическое создание тестовых данных
+
+**Технологии**: Apache Kafka, PostgreSQL, ClickHouse, Python
+
+**Файлы**:
+- `ch_producer.py` - Producer с логикой защиты от дублирования
+- `clickhouse_consumer.py` - Consumer для ClickHouse
+- `postgress_consumer.py` - Consumer для PostgreSQL
+- `docker-compose.yml` - Конфигурация Kafka и Zookeeper
+
 ## 🎯 Цель проектов
 
 Демонстрация полного цикла работы с данными:
 
 | Этап | Технология | Назначение |
 |------|------------|------------|
-| **Транзакции** | PostgreSQL | Операционные данные, аудит |
-| **Аналитика** | ClickHouse | Агрегация, метрики, Retention |
-| **Документная БД** | MongoDB | Гибкое хранение, архивация |
-| **Потоки** | Kafka | Реал-тайм обработка событий |
-| **Оркестрация** | Airflow | Управление пайплайнами |
+| Транзакции | PostgreSQL | Операционные данные, аудит |
+| Аналитика | ClickHouse | Агрегация, метрики, Retention |
+| Документная БД | MongoDB | Гибкое хранение, архивация |
+| Потоки | **Kafka** | **Реал-тайм обработка событий** |
+| Оркестрация | Airflow | Управление пайплайнами |
 
 ## 🚀 Быстрый старт
 
+### PostgreSQL Audit
 ```bash
-# PostgreSQL Audit
 cd postgress_audit
 psql -f postgress_audit_data.sql
-
-# ClickHouse Analytics
-cd clickhouse_events
-clickhouse-client < user_events_analytics.sql
-
-# MongoDB User Archivation
-cd mongobd_archive_users
-python archive_users.py
 
