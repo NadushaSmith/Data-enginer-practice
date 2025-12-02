@@ -1,0 +1,5 @@
+id,user_id,user_name,changed_at,changed_by,field_changed,old_value,new_value
+1,1,Ручной тест 20:59:23.839026,2025-10-25 19:57:06.000225,user,name,Иван Иванов,Иван Сидоров
+2,2,Петр Николаев,2025-10-25 19:58:56.998633,user,role,admin,manager
+3,1,Ручной тест 20:59:23.839026,2025-10-25 20:02:24.503375,user,email,ivan@test.com,ivan.sidorov@newmail.com
+6,2,Петр Николаев,2025-10-25 20:05:16.218423,user,role,manager,director
