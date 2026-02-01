@@ -1,0 +1,64 @@
+"""
+АВТОГЕНЕРИРУЕМЫЙ MASTER DAG
+Создан: {{ generation_date }}
+"""
+from airflow import DAG
+from airflow.operators.python import PythonOperator
+from airflow.providers.common.sql.operators.sql import SQLExecuteQueryOperator
+from datetime import datetime, timedelta
+
+with DAG(
+    dag_id="master_generated_dag",
+    description="Автогенерируемый DAG из всех скриптов",
+    start_date=datetime(2024, 1, 26),
+    schedule_interval="{{ common_schedule }}",
+    catchup=False,
+    default_args={
+        "owner": "airflow",
+        "depends_on_past": False,
+        "retries": 1,
+        "retry_delay": timedelta(minutes=5),
+    },
+    tags=["auto-generated", "master"],
+) as dag:
+
+    {# Python задачи из check_data.py #}
+    {% if check_data_script %}
+    # Скрипт: {{ check_data_script.filename }}
+{{ check_data_script.code|indent(4) }}
+
+    {% for function in check_data_script.functions %}
+    check_data_{{ function }} = PythonOperator(
+        task_id="check_data_{{ function }}",
+        python_callable={{ function }},
+    )
+    {% endfor %}
+    {% endif %}
+
+    {# Python задачи из monitor_pipelines.py #}
+    {% if monitor_script %}
+    # Скрипт: {{ monitor_script.filename }}
+{{ monitor_script.code|indent(4) }}
+
+    {% for function in monitor_script.functions %}
+    monitor_{{ function }} = PythonOperator(
+        task_id="monitor_{{ function }}",
+        python_callable={{ function }},
+    )
+    {% endfor %}
+    {% endif %}
+
+    {# SQL задачи из validation_data.sql #}
+    {% if sql_script %}
+    # Скрипт: {{ sql_script.filename }}
+    {% for command in sql_script.commands %}
+    validate_cmd_{{ loop.index }} = SQLExecuteQueryOperator(
+        task_id="validate_cmd_{{ loop.index }}",
+        sql="""
+{{ command.sql|indent(8) }}
+""",
+        conn_id="postgres_default",
+        autocommit=True,
+    )
+    {% endfor %}
+    {% endif %}

@@ -1,0 +1,32 @@
+# Airflow logs
+logs/
+*.log
+
+# Airflow database and config
+airflow.db
+airflow.cfg
+*.pid
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDE
+.idea/
+.vscode/
+
+# Environment
+.env
+.env.local
+
+# Temp files
+*.tmp
+*.temp
+
+# Docker
+docker-compose.override.yml
+
+# Sensitive data
+secrets/
+credentials/
